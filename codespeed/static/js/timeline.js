@@ -1,8 +1,8 @@
 var Timeline = (function(window){
 
 // Localize globals
-var CHANGES_URL = window.CHANGES_URL, readCheckbox = window.readCheckbox,
-    getLoadText = window.getLoadText;
+//var readCheckbox = window.readCheckbox,
+//    getLoadText = window.getLoadText;
 
 var seriesindex = [],
     baselineColor = "#d8b83f",
