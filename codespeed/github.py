@@ -7,8 +7,10 @@ git installed, the ability to write files, etc.
 """
 import logging
 import urllib
+import urllib2
 import re
 import isodate
+import base64
 
 from django.core.cache import cache
 
@@ -38,7 +40,15 @@ def retrieve_revision(commit_id, username, project, revision = None):
 
     if commit_json is None:
         try:
-            commit_json = json.load(urllib.urlopen(commit_url))
+            request = urllib2.Request(commit_url)
+
+            username, token = project.repo_user, project.repo_pass
+            if username and token:
+                base64string = base64.encodestring('%s/token:%s' % (username, token)).replace('\n', '')
+                request.add_header("Authorization", "Basic %s" % base64string)
+
+            data = urllib2.urlopen(request)
+            commit_json = json.load(data)
         except IOError, e:
             logger.exception("Unable to load %s: %s",
                 commit_url, e, exc_info=True)
@@ -96,6 +106,8 @@ def getlogs(endrev, startrev):
     username = m.group("username")
     project = m.group("project")
 
+    project_instance = endrev.branch.project
+
     logs = []
     last_rev_data = None
     revision_count = 0
@@ -104,19 +116,21 @@ def getlogs(endrev, startrev):
     # not only those present in the Codespeed DB
 
     for revision in revisions:
-        last_rev_data = retrieve_revision(revision.commitid, username, project, revision)
+        last_rev_data = retrieve_revision(revision.commitid, username,
+                                          project_instance, revision)
         logs.append(last_rev_data)
         revision_count += 1
         ancestor_found = (startrev.commitid in [rev['id'] for rev in last_rev_data['parents']])
-    
+
     # Simple approach to find the startrev, stop after found or after
     # #GITHUB_REVISION_LIMIT revisions are fetched
-    while (revision_count < GITHUB_REVISION_LIMIT 
+    while (revision_count < GITHUB_REVISION_LIMIT
             and not ancestor_found
             and len(last_rev_data['parents']) > 0):
-        last_rev_data = retrieve_revision(last_rev_data['parents'][0]['id'], username, project)
+        last_rev_data = retrieve_revision(last_rev_data['parents'][0]['id'],
+                username, project_instance)
         logs.append(last_rev_data)
         revision_count += 1
         ancestor_found = (startrev.commitid in [rev['id'] for rev in last_rev_data['parents']])
-    
+
     return sorted(logs, key=lambda i: i['date'], reverse=True)
