@@ -415,7 +415,8 @@ def gettimelinedata(request):
                     if res.std_dev != None:
                         std_dev = res.std_dev
                     results.append(
-                        [str(res.revision.date), res.value, std_dev, res.revision.get_short_commitid(), branch]
+                        [str(res.revision.date), res.value, std_dev,
+                            res.revision.commitid, branch]
                     )
                 timeline['branches'][branch][executable] = results
                 append = True
@@ -738,8 +739,6 @@ def displaylogs(request):
 
     # add commit browsing url to logs
     project = rev.branch.project
-    for log in logs:
-        log['commit_browse_url'] = project.commit_browsing_url.format(**log)
 
     return render_to_response('codespeed/changes_logs.html',
                                 {'error': error, 'logs': logs,
