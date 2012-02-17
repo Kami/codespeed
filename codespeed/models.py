@@ -88,7 +88,11 @@ class Revision(models.Model):
     def get_short_commitid(self):
         return self.commitid[:10]
 
+    @property
     def get_browsing_url(self):
+        if not self.branch.project.commit_browsing_url:
+            return None
+
         return self.branch.project.commit_browsing_url.format(**self.__dict__)
 
     def __unicode__(self):
