@@ -86,7 +86,7 @@ if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
 
 
-ROOT_URLCONF = 'example.urls'
+ROOT_URLCONF = 'ele.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(BASEDIR, 'templates'),
@@ -122,9 +122,9 @@ STATIC_ROOT = os.path.join(BASEDIR, "sitestatic")
 from codespeed.settings import *
 
 ## General default options ##
-WEBSITE_NAME = "MySpeedSite" # This name will be used in the reports RSS feed
+WEBSITE_NAME = "Ele Speed Center" # This name will be used in the reports RSS feed
 
-#DEF_ENVIRONMENT = None #Name of the environment which should be selected as default
+DEF_ENVIRONMENT = "Ele Buildbot" #Name of the environment which should be selected as default
 
 
 #DEF_BASELINE = None # Which executable + revision should be default as a baseline
@@ -146,16 +146,16 @@ WEBSITE_NAME = "MySpeedSite" # This name will be used in the reports RSS feed
                       # Given as the name of the executable.
                       # Example: defaultexecutable = "myexe"
 
-#SHOW_AUTHOR_EMAIL_ADDRESS = True # Whether to show the authors email address in the
+SHOW_AUTHOR_EMAIL_ADDRESS = True # Whether to show the authors email address in the
                                  # changes log
 
 ## Timeline view options ##
-#DEF_BENCHMARK = "grid" # Default selected benchmark. Possible values:
+DEF_BENCHMARK = "grid" # Default selected benchmark. Possible values:
                        #   "grid": will show the grid of plots
                        #   "show_none": will just show a text message
                        #   "mybench": will select benchmark "mybench"
 
-#DEF_TIMELINE_LIMIT = 50  # Default number of revisions to be plotted
+DEF_TIMELINE_LIMIT = 50  # Default number of revisions to be plotted
                          # Possible values 10,50,200,1000
 
 #TIMELINE_BRANCHES = True # NOTE: Only the default branch is currently shown 
@@ -181,6 +181,6 @@ WEBSITE_NAME = "MySpeedSite" # This name will be used in the reports RSS feed
                          #     ('myexe', '21df2423ra'),
                          #     ('myexe', 'L'),]
 
-#DEF_BRANCH = "default" # Defines the default branch to be used.
+DEF_BRANCH = "master" # Defines the default branch to be used.
                        # In git projects, this branch is usually be calles
                        # "master"
