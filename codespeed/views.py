@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 from itertools import chain
+import time
 import json
 import logging
 
@@ -856,9 +857,14 @@ def save_result(data):
         rev = branch.revisions.get(commitid=data['commitid'])
     except Revision.DoesNotExist:
         rev_date = data.get("revision_date")
+        time_format = '%Y-%m-%d %H:%M:%S'
+
         # "None" (as string) can happen when we urlencode the POST data
         if not rev_date or rev_date in ["", "None"]:
             rev_date = datetime.today()
+        else:
+            rev_date = datetime.fromtimestamp(time.mktime(time.strptime(rev_date, time_format)))
+
         rev = Revision(branch=branch, project=p, commitid=data['commitid'],
                        date=rev_date)
         try:
@@ -886,7 +892,10 @@ def save_result(data):
 
     r.value = data["result_value"]
     if 'result_date' in data:
-        r.date = data["result_date"]
+        time_format = '%Y-%m-%d %H:%M:%S'
+        date = datetime.fromtimestamp(time.mktime(time.strptime(data['result_date'], time_format)))
+
+        r.date = date
     elif rev.date:
         r.date = rev.date
     else:
