@@ -25,7 +25,7 @@ function getColor(exe_id) {
 }
 
 function shouldPlotEquidistant() {
-  return $("#equidistant").is(':checked');
+  return ($("#equidistant").is(':checked') && $('#equidistant').val() === 'on');
 }
 
 function getConfiguration() {
@@ -123,7 +123,7 @@ function renderPlot(data) {
     legend: {show: true, location: 'nw'},
     highlighter: {
       tooltipLocation: 'nw',
-      yvalues: 4,
+      yvalues: 3,
       formatString:'<table class="jqplot-highlighter">    <tr><td>date:</td><td>%s</td></tr> <tr><td>result:</td><td>%s</td></tr> <tr><td>std dev:</td><td>%s</td></tr> <tr><td>commit:</td><td>%s</td></tr></table>'
     },
     cursor:{zoom:true, showTooltip:false, clickReset:true}
@@ -227,7 +227,7 @@ function render(data) {
 function refreshContent() {
   var h = $("#content").height();//get height for loading text
   $("#plotgrid").fadeOut("fast", function() {
-    $("#plotgrid").html(getLoadText("Loading...", h, true)).show();
+  $("#plotgrid").html(getLoadText("Loading...", h, true)).show();
     $.getJSON("json/", getConfiguration(), render);
   });
 }
@@ -305,7 +305,13 @@ function setValuesOfInputFields(event) {
   });
 
   $("#baselinecolor").css("background-color", baselineColor);
-  $("#equidistant").attr('checked', valueOrDefault(event.parameters.equid, defaults.equidistant === "on"));
+  value = valueOrDefault(event.parameters.equid, defaults.equidistant === "on");
+  if (value === 'off' || !value) {
+      $("#equidistant").removeAttr('checked');
+  }
+  else {
+      $("#equidistant").attr('checked', 'on');
+  }
 }
 
 function init(def) {
