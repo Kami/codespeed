@@ -78,7 +78,7 @@ def save_result(data, update_repo=True):
         rev_date = data.get("revision_date")
         # "None" (as string) can happen when we urlencode the POST data
         if not rev_date or rev_date in ["", "None"]:
-            rev_date = datetime.today()
+            rev_date = datetime.utcnow()
         rev = Revision(branch=branch, project=p, commitid=data['commitid'],
                        date=rev_date)
         try:
