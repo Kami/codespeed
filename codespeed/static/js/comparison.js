@@ -225,6 +225,11 @@ function renderComparisonPlot(plotid, benchmarks, exes, enviros, baseline, chart
     var barWidth = 20;
     var w = 0;
     var h = 0;
+
+    // Specify custom min width so it works better with very long executable
+    // and environment names (default value is 320)
+    var min_width = 500;
+
     var plotoptions = [];
     if (horizontal) {
         plotoptions = {
@@ -276,7 +281,7 @@ function renderComparisonPlot(plotid, benchmarks, exes, enviros, baseline, chart
         } else if (h < 300) {
             h = 300;
             plotoptions.seriesDefaults.rendererOptions.barPadding = 14;
-            plotoptions.seriesDefaults.rendererOptions.barMargin = 25;
+            plotoptions.seriesDefaults.rendererOptions.barMargin = 27;
         }
         w = plotwidth;
     } else {
@@ -316,16 +321,16 @@ function renderComparisonPlot(plotid, benchmarks, exes, enviros, baseline, chart
         if (w > plotwidth) {
             w = plotwidth;
         } else if (w < 320) {
-            w = 320;
+            w = min_width;
             plotoptions.seriesDefaults.rendererOptions.barPadding = 15;
-            plotoptions.seriesDefaults.rendererOptions.barMargin = 25;
+            plotoptions.seriesDefaults.rendererOptions.barMargin = 27;
         }
         if (chart === "normal bars" && series.length === 1 && benchmarks.length > 1) {
             plotoptions.axes.xaxis.tickOptions.angle = -30;
         } else if (chart === "stacked bars") {
             plotoptions.axes.xaxis.tickOptions.angle = -60;
             plotoptions.seriesDefaults.rendererOptions.barMargin += 5;
-            $("#" + plotid).css("margin-left", "25px");
+            $("#" + plotid).css("margin-left", "27px");
             h += 60;
         } else if (chart === "relative bars") {
             plotoptions.axes.yaxis.min = null;
@@ -335,7 +340,7 @@ function renderComparisonPlot(plotid, benchmarks, exes, enviros, baseline, chart
         }
     }
 
-    plotoptions.legend = {show: true, location: 'ne'};
+    plotoptions.legend = {show: true, location: 'e'};
     plotoptions.series = series;
     plotoptions.grid = {borderColor: '#9DADC6', shadow: false, drawBorder: true};
     plotoptions.seriesDefaults.shadow = false;
