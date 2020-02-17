@@ -58,7 +58,7 @@ def getbaselineexecutables():
     }]
     executables = Executable.objects.select_related('project')
     revs = Revision.objects.exclude(tag="").select_related('branch__project')
-    maxlen = 27
+    maxlen = 30
     for rev in revs:
         # Add executables that correspond to each tagged revision.
         for exe in [e for e in executables if e.project == rev.branch.project]:
@@ -116,7 +116,7 @@ def getcomparisonexes():
     for proj in Project.objects.all():
         executables = []
         executablekeys = []
-        maxlen = 27
+        maxlen = 30
         # add all tagged revs for any project
         for exe in baselines:
             if exe['key'] != "none" and exe['executable'].project == proj:
